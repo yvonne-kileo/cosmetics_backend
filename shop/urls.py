@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import (
     ProductViewSet, CategoryViewSet, BrandViewSet, OrderViewSet, CustomerViewSet,
     ProductVariantViewSet, OrderItemViewSet, ShippingAddressViewSet,
@@ -22,10 +23,16 @@ router.register(r'wishlists', WishlistViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+
+    # Cart endpoints
     path('cart/add/', add_to_cart, name='cart-add'),
     path('cart/', view_cart, name='cart-view'),
     path('cart/item/<int:item_id>/', update_cart_item, name='cart-item-update'),
     path('cart/item/<int:item_id>/remove/', remove_from_cart, name='cart-item-remove'),
     path('cart/clear/', clear_cart, name='cart-clear'),
     path('cart/checkout/', checkout, name='cart-checkout'),
+
+    # JWT Authentication endpoints
+    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
